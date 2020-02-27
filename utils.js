@@ -1,12 +1,13 @@
 const axios = require('axios')
-const config = require('./config');
+
+const secrets = require('./secrets')
 
 exports.send_message_to_me = function(message_text){
 
   let url = 'https://api.line.me/v2/bot/message/push'
 
   let data = {
-    to: config.my_user_id,
+    to: secrets.user_id,
     messages: [
       {type: 'text', text: message_text},
     ]
@@ -15,7 +16,7 @@ exports.send_message_to_me = function(message_text){
   let options = {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + config.channel_access_token,
+      'Authorization': 'Bearer ' + secrets.channel_access_token,
     }
   }
 
@@ -38,7 +39,7 @@ exports.send_response = function(reply_token, response_text){
   let options = {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + config.channel_access_token,
+      'Authorization': 'Bearer ' + secrets.channel_access_token,
     },
   }
 

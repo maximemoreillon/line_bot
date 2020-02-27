@@ -4,8 +4,7 @@ const bodyParser = require('body-parser')
 const authorization_middleware = require('@moreillon/authorization_middleware')
 
 const secrets = require('./secrets')
-const commands = require('./commands').commands
-const config = require('./config')
+const commands = require('./commands')
 const utils = require('./utils')
 
 const port = 8087;
@@ -35,7 +34,7 @@ app.post('/webhook', (req, res) => {
   })
 
   if(found_command) {
-    if(!found_command.private || req.body.events[0].source.userId === config.my_user_id) {
+    if(!found_command.private || req.body.events[0].source.userId === secrets.user_id) {
       found_command.command(reply_token)
     }
     else {
