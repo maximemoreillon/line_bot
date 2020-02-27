@@ -30,7 +30,7 @@ module.exports = [
           utils.send_response(reply_token,"Current balance is " + response.data + "円");
         })
         .catch(error => {
-          utils.send_response(reply_token,error.data)
+          utils.send_response(reply_token, "Error connecting to finance API")
         })
       });
 
@@ -55,7 +55,7 @@ module.exports = [
           utils.send_response(reply_token,"Current weight: " + response.data[0].weight + " kg");
         })
         .catch(error => {
-          utils.send_response(reply_token, error.data);
+          utils.send_response(reply_token, "Error connecting to weight API");
         })
       })
 
