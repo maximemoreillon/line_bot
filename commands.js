@@ -18,7 +18,7 @@ module.exports = [
     command: (reply_token) => {
 
       jwt.sign({ service_name: 'line_bot' }, secrets.jwt_secret, (err, token) => {
-        if(err) return utils.send_response(reply_token,"there was an error processing the command")
+        if(err) return utils.send_response(reply_token,err)
         axios.post(secrets.finances_api_url, {},{
           headers: {
             'Content-Type': 'application/json',
@@ -30,8 +30,7 @@ module.exports = [
           utils.send_response(reply_token,"Current balance is " + response.data + "円");
         })
         .catch(error => {
-          utils.send_response(reply_token,"there was an error processing the command")
-          console.log(error)
+          utils.send_response(reply_token,error)
         })
       });
 
@@ -44,7 +43,7 @@ module.exports = [
     private: true,
     command: (reply_token) => {
       jwt.sign({ service_name: 'line_bot' }, secrets.jwt_secret, (err, token) => {
-        if(err) return utils.send_response(reply_token,"there was an error processing the command")
+        if(err) return utils.send_response(reply_token,err)
         axios.post(secrets.weight_api_url, {},{
           headers: {
             'Content-Type': 'application/json',
@@ -56,8 +55,7 @@ module.exports = [
           utils.send_response(reply_token,"Current weight: " + response.data[0].weight + " kg");
         })
         .catch(error => {
-          utils.send_response(reply_token,"there was an error processing the command");
-          console.log(error)
+          utils.send_response(reply_token,error);
         })
       })
 
