@@ -20,7 +20,7 @@ module.exports = [
 
       jwt.sign({ service_name: 'line_bot' }, secrets.jwt_secret, (err, token) => {
         if(err) return utils.send_response(reply_token, "Error generating JWT")
-        axios.post(secrets.finances_api_url, {},{
+        axios.post(secrets.finances_api_url, {account: secrets.finances_account_name},{
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token,
@@ -37,7 +37,7 @@ module.exports = [
 
     }
   },
-  
+
   {
     message: "weight",
     private: true,
