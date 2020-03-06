@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: line-bot-deployment
+  name: line-bot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: line-bot-deployment
+      app: line-bot
   template:
     metadata:
       labels:
-        app: line-bot-deployment
+        app: line-bot
     spec:
       containers:
       - name: line-bot
@@ -22,12 +22,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: line-bot-service
-  name: line-bot-service
+    run: line-bot
+  name: line-bot
 spec:
   ports:
   - port: 8087
     nodePort: 30087
   selector:
-    app: line-bot-deployment
+    app: line-bot
   type: LoadBalancer
