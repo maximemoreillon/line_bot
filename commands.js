@@ -8,7 +8,7 @@ module.exports = [
   {
     message: "hello",
     private: false,
-    command: function(reply_token) {
+    command: (reply_token) => {
       utils.send_response(reply_token,"Hello to you too!");
     }
   },
@@ -59,6 +59,21 @@ module.exports = [
           utils.send_response(reply_token, "Error connecting to " + secrets.weight_api_url);
         })
       })
+
+    }
+  },
+
+  {
+    message: "commands",
+    private: false,
+    command: (reply_token) => {
+      let command_list = []
+      module.exports.forEach( command => {
+        command_list.push(command.message)
+      })
+      let response = 'Command list: \n'
+      response += command_list.join('\n')
+      utils.send_response(reply_token,response);
 
     }
   },
