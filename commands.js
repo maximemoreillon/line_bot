@@ -4,6 +4,11 @@ const jwt = require('jsonwebtoken')
 
 const secrets = require('./secrets');
 
+jwt.sign({ service_name: 'line_bot' }, secrets.jwt_secret, (err, token) => {
+  if(err) return console.log('Error generating token')
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+})
+
 module.exports = [
   {
     message: "hello",
@@ -18,22 +23,13 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      jwt.sign({ service_name: 'line_bot' }, secrets.jwt_secret, (err, token) => {
-        if(err) return utils.send_response(reply_token, "Error generating JWT")
-        axios.post(secrets.finances_api_url, {account: secrets.finances_account_name},{
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token,
-          },
-          timeout: 3000,
-        })
-        .then(response => {
-          utils.send_response(reply_token,"Current balance is " + response.data + "円");
-        })
-        .catch(error => {
-          utils.send_response(reply_token, "Error connecting to " + secrets.finances_api_url)
-        })
-      });
+      axios.post(secrets.finances_api_url, {account: secrets.finances_account_name})
+      .then(response => {
+        utils.send_response(reply_token,"Current balance is " + response.data + "円");
+      })
+      .catch(error => {
+        utils.send_response(reply_token, `Error connecting to ${secrets.finances_api_url} : ${error}`)
+      })
 
     }
   },
@@ -43,21 +39,59 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      jwt.sign({ service_name: 'line_bot' }, secrets.jwt_secret, (err, token) => {
-        if(err) return utils.send_response(reply_token, "Error generating JWT")
-        axios.post(secrets.weight_api_url, {},{
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token,
-          },
-          timeout: 3000,
-        })
-        .then(response => {
-          utils.send_response(reply_token,"Current weight: " + response.data[0].weight + " kg");
-        })
-        .catch(error => {
-          utils.send_response(reply_token, "Error connecting to " + secrets.weight_api_url);
-        })
+      axios.post(secrets.weight_api_url, {})
+      .then(response => {
+        utils.send_response(reply_token,"Current weight: " + response.data[0].weight + " kg");
+      })
+      .catch(error => {
+        utils.send_response(reply_token, `Error connecting to ${secrets.weight_api_url} : ${error}`);
+      })
+
+    }
+  },
+
+  {
+    message: "current",
+    private: true,
+    command: (reply_token) => {
+
+      axios.get(secrets.current_consumption_api_url, {})
+      .then(response => {
+        utils.send_response(reply_token,`Apartment current consumption: ${response.data.total}A`);
+      })
+      .catch(error => {
+        utils.send_response(reply_token, `Error connecting to ${secrets.current_consumption_api_url} : ${error}`);
+      })
+
+    }
+  },
+
+  {
+    message: "solar",
+    private: true,
+    command: (reply_token) => {
+
+      axios.get(secrets.solar_api_url, {})
+      .then(response => {
+        utils.send_response(reply_token,`Current battery voltage: ${response.data.voltage}V`);
+      })
+      .catch(error => {
+        utils.send_response(reply_token, `Error connecting to ${secrets.solar_api_url} : ${error}`);
+      })
+
+    }
+  },
+  {
+    message: "room",
+    private: true,
+    command: (reply_token) => {
+
+      axios.get(secrets.room_api_url, {})
+      .then(response => {
+        utils.send_response(reply_token,`Current room: ${response.data}`);
+      })
+      .catch(error => {
+        utils.send_response(reply_token, `Error connecting to ${secrets.room_api_url} : ${error}`);
       })
 
     }
