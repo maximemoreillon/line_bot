@@ -41,7 +41,7 @@ module.exports = [
 
       axios.post(secrets.weight_api_url, {})
       .then(response => {
-        utils.send_response(reply_token,"Current weight: " + response.data[0]+ " kg");
+        utils.send_response(reply_token,"Current weight: " + response.data.weight+ " kg");
       })
       .catch(error => {
         utils.send_response(reply_token, `Error connecting to ${secrets.weight_api_url} : ${error}`);
