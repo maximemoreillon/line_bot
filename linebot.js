@@ -6,6 +6,7 @@ const authorization_middleware = require('@moreillon/authorization_middleware')
 const secrets = require('./secrets')
 const commands = require('./commands')
 const utils = require('./utils')
+const cors = require('cors')
 
 const port = 8087;
 
@@ -14,6 +15,7 @@ authorization_middleware.secret = secrets.jwt_secret
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 
 app.get('/', (req, res) => {
