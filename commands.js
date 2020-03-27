@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 
 const secrets = require('./secrets');
 
-jwt.sign({ service_name: 'line_bot' }, secrets.jwt_secret, (err, token) => {
+jwt.sign({ username: secrets.jwt_username }, secrets.jwt_secret, (err, token) => {
   if(err) return console.log('Error generating token')
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 })
