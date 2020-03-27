@@ -12,7 +12,7 @@ const utils = require('./utils')
 
 const port = 8087;
 
-authorization_middleware.secret = secrets.jwt_secret
+authorization_middleware.authentication_api_url = secrets.authentication_api_url
 
 
 const app = express();
