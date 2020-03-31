@@ -1,13 +1,9 @@
 const utils = require('./utils')
 const axios = require('axios')
-const jwt = require('jsonwebtoken')
 
 const secrets = require('./secrets');
 
-jwt.sign({ username: secrets.jwt_username }, secrets.jwt_secret, (err, token) => {
-  if(err) return console.log('Error generating token')
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-})
+axios.defaults.headers.common['Authorization'] = `Bearer ${secrets.jwt}`
 
 module.exports = [
   {
