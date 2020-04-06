@@ -9,11 +9,9 @@ const secrets = require('./secrets')
 const commands = require('./commands')
 const utils = require('./utils')
 
-
 const port = 8087;
 
 authorization_middleware.authentication_api_url = secrets.authentication_api_url
-
 
 const app = express();
 app.use(bodyParser.json());
