@@ -3,7 +3,7 @@ stages:
   - deploy
 
 variables:
-  APPLICATION_NAME: authentication
+  APPLICATION_NAME: line-bot
   DOCKER_IMAGE: ${CONTAINER_REGISTRY}/${APPLICATION_NAME}
   CERTIFICATE_DOMAIN: linebot.maximemoreillon.com
 
