@@ -3,13 +3,20 @@ stages:
   - deploy
 
 variables:
-  DOCKER_IMAGE: 192.168.1.2:5000/line-bot
-  KUBERNETES_DEPLOYMENT: line-bot
+  APPLICATION_NAME: authentication
+  DOCKER_IMAGE: ${CONTAINER_REGISTRY}/${APPLICATION_NAME}
+  CERTIFICATE_DOMAIN: linebot.maximemoreillon.com
 
 
 containerization:
   stage: containerization
   script:
+    # If docker registry password provided, attempt login
+    - >
+      if [ -z ${CONTAINER_REGISTRY_PASSWORD} ];
+      then echo "CONTAINER_REGISTRY_PASSWORD not set, skipping login";
+      else echo "${CONTAINER_REGISTRY_PASSWORD}" | docker login ${CONTAINER_REGISTRY} --username ${CONTAINER_REGISTRY_USERNAME} --password-stdin;
+      fi
     - cp ${SECRETS} ./secrets.js
     - docker build -t ${DOCKER_IMAGE} .
     - docker push ${DOCKER_IMAGE}
@@ -18,7 +25,9 @@ containerization:
 deployment:
   stage: deploy
   script:
-    - kubectl apply -f deployment.yml
-    - kubectl rollout restart deployment/${KUBERNETES_DEPLOYMENT}
+    - envsubst < deployment.yml | kubectl apply -f -
+    - kubectl rollout restart deployment/${APPLICATION_NAME}
   environment:
     name: production
+    kubernetes:
+      namespace: ${KUBERNETES_NAMESPACE}

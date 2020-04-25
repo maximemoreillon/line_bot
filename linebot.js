@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
 const cors = require('cors')
+const dotenv = require('dotenv');
 
 const authorization_middleware = require('@moreillon/authorization_middleware')
 
@@ -9,7 +10,10 @@ const secrets = require('./secrets')
 const commands = require('./commands')
 const utils = require('./utils')
 
-const port = 8087;
+dotenv.config();
+
+var port = 80
+if(process.env.APP_PORT) port=process.env.APP_PORT
 
 authorization_middleware.authentication_api_url = secrets.authentication_api_url
 
