@@ -12,6 +12,7 @@ const utils = require('./utils')
 
 dotenv.config();
 
+// Port config
 var port = 80
 if(process.env.APP_PORT) port=process.env.APP_PORT
 
