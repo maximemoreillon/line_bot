@@ -21,7 +21,6 @@ authorization_middleware.authentication_api_url = secrets.authentication_api_url
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'dist')))
 
 
 app.get('/', (req, res) => {
@@ -57,13 +56,11 @@ app.post('/webhook', (req, res) => {
 
 app.post('/notify', authorization_middleware.middleware, (req, res) => {
 
-  if('message' in req.body) {
-    res.send('OK');
-    utils.send_message_to_me(req.body.message);
-  }
-  else {
-    res.status(400)
-  }
+  if(! ('message' in req.body)) return res.status(400).send('message not present in body')
+
+  res.send('OK');
+  utils.send_message_to_me(req.body.message);
+
 })
 
 app.listen(port, () => {
