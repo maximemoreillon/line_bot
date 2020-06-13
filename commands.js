@@ -19,9 +19,9 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.post(secrets.finances_api_url, {account: secrets.finances_account_name})
+      axios.get(secrets.finances_api_url, {params: {account: secrets.finances_account_name}})
       .then(response => {
-        utils.send_response(reply_token,"Current balance is " + response.data + "円");
+        utils.send_response(reply_token,`Current balance is JPY ${response.data}`);
       })
       .catch(error => {
         utils.send_response(reply_token, `Error connecting to ${secrets.finances_api_url} : ${error}`)
@@ -35,7 +35,7 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.post(secrets.weight_api_url, {})
+      axios.get(secrets.weight_api_url)
       .then(response => {
         utils.send_response(reply_token,"Current weight: " + response.data.weight+ " kg");
       })
@@ -51,7 +51,7 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.current_consumption_api_url, {})
+      axios.get(secrets.current_consumption_api_url)
       .then(response => {
         utils.send_response(reply_token,`Apartment current consumption: ${response.data.total}A`);
       })
@@ -67,7 +67,7 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.solar_api_url, {})
+      axios.get(secrets.solar_api_url)
       .then(response => {
         utils.send_response(reply_token,`Current battery voltage: ${response.data.voltage}V`);
       })
@@ -82,7 +82,7 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.room_api_url, {})
+      axios.get(secrets.room_api_url)
       .then(response => {
         utils.send_response(reply_token,`Current room: ${response.data}`);
       })

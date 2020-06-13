@@ -10,7 +10,7 @@ const secrets = require('./secrets')
 const commands = require('./commands')
 const utils = require('./utils')
 
-dotenv.config();
+dotenv.config()
 
 // Port config
 var port = 80
