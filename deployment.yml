@@ -18,6 +18,9 @@ spec:
         imagePullPolicy: Always # Ensures that k8s pulls a new image on restart
         ports:
         - containerPort: 80
+        env:
+        - name: AUTHENTICATION_API_URL
+          value: https://api.authentication.maximemoreillon.com
       imagePullSecrets:
       - name: registry-credentials
 ---
