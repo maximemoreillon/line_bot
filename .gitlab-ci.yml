@@ -10,6 +10,8 @@ variables:
 
 containerization:
   stage: containerization
+  tags:
+    - moreillon
   script:
     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
     # Import secrets from GitLab
@@ -21,6 +23,8 @@ containerization:
 
 deployment:
   stage: deploy
+  tags:
+    - moreillon
   script:
     - envsubst < kubernetes_manifest.yml | kubectl apply -f -
     - kubectl rollout restart deployment/${APPLICATION_NAME}
