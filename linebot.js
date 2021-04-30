@@ -4,7 +4,7 @@ const path = require('path')
 const cors = require('cors')
 const dotenv = require('dotenv');
 
-const authentication_middleware = require('@moreillon/authentication_middleware')
+const auth = require('@moreillon/express_identification_middleware')
 
 const secrets = require('./secrets')
 const commands = require('./commands')
@@ -16,10 +16,11 @@ dotenv.config()
 var port = 80
 if(process.env.APP_PORT) port=process.env.APP_PORT
 
+const auth_options = { url: `${process.env.AUTHENTICATION_API_URL}/whoami` }
 
-const app = express();
-app.use(bodyParser.json());
-app.use(cors());
+const app = express()
+app.use(bodyParser.json())
+app.use(cors())
 
 
 app.get('/', (req, res) => {
@@ -53,12 +54,14 @@ app.post('/webhook', (req, res) => {
 
 });
 
-app.post('/notify', authentication_middleware.authenticate, (req, res) => {
+app.post('/notify', auth(auth_options), (req, res) => {
 
-  if(! ('message' in req.body)) return res.status(400).send('message not present in body')
+  const {message} = req.body
+
+  if(!message) return res.status(400).send('message not present in body')
 
   res.send('OK');
-  utils.send_message_to_me(req.body.message);
+  utils.send_message_to_me(message)
 
 })
 
