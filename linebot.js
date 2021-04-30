@@ -23,7 +23,7 @@ app.use(cors());
 
 
 app.get('/', (req, res) => {
-  res.send("Line bot")
+  res.send("Line bot v1.0.2")
 })
 
 app.post('/webhook', (req, res) => {
