@@ -2,6 +2,7 @@ const utils = require('./utils')
 const axios = require('axios')
 const dotenv = require('dotenv');
 const secrets = require('./secrets.js')
+const pjson = require('./package.json')
 
 dotenv.config()
 
@@ -18,6 +19,13 @@ module.exports = [
     private: false,
     command: (reply_token) => {
       utils.send_response(reply_token,"Hello to you too!");
+    }
+  },
+  {
+    message: "version",
+    private: false,
+    command: (reply_token) => {
+      utils.send_response(reply_token,pjson.version);
     }
   },
 
