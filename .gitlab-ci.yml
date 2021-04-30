@@ -14,8 +14,6 @@ containerization:
     - moreillon
   script:
     - echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
-    # Import secrets from GitLab
-    - cp ${SECRETS} ./secrets.js
     # Build and push docker image
     - docker build -t ${DOCKER_IMAGE} .
     - docker push ${DOCKER_IMAGE}

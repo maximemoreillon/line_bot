@@ -1,7 +1,7 @@
 const utils = require('./utils')
 const axios = require('axios')
 const dotenv = require('dotenv');
-const secrets = require('./secrets.js')
+const apis = require('./apis.js')
 const pjson = require('./package.json')
 
 dotenv.config()
@@ -29,37 +29,18 @@ module.exports = [
     }
   },
 
-  /*
-  {
-    message: "balance",
-    private: true,
-    command: (reply_token) => {
-
-      const url =
-
-      axios.get(secrets.finances_api_url, {params: {account: secrets.finances_account_name}})
-      .then(response => {
-        utils.send_response(reply_token,`Current balance is JPY ${response.data}`);
-      })
-      .catch(error => {
-        utils.send_response(reply_token, `Error connecting to ${secrets.finances_api_url} : ${error}`)
-      })
-
-    }
-  },
-  */
 
   {
     message: "weight",
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.weight_api_url, request_options)
+      axios.get(apis.weight_api_url, request_options)
       .then(response => {
         utils.send_response(reply_token,"Current weight: " + response.data.weight+ " kg");
       })
       .catch(error => {
-        utils.send_response(reply_token, `Error connecting to ${secrets.weight_api_url} : ${error}`);
+        utils.send_response(reply_token, `Error connecting to ${apis.weight_api_url} : ${error}`);
       })
 
     }
@@ -70,12 +51,12 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.current_consumption_api_url, request_options)
+      axios.get(apis.current_consumption_api_url, request_options)
       .then(response => {
         utils.send_response(reply_token,`Apartment current consumption: ${response.data.total}A`);
       })
       .catch(error => {
-        utils.send_response(reply_token, `Error connecting to ${secrets.current_consumption_api_url} : ${error}`);
+        utils.send_response(reply_token, `Error connecting to ${apis.current_consumption_api_url} : ${error}`);
       })
 
     }
@@ -86,12 +67,12 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.solar_api_url, request_options)
+      axios.get(apis.solar_api_url, request_options)
       .then(response => {
         utils.send_response(reply_token,`Current battery voltage: ${response.data.voltage}V`);
       })
       .catch(error => {
-        utils.send_response(reply_token, `Error connecting to ${secrets.solar_api_url} : ${error}`);
+        utils.send_response(reply_token, `Error connecting to ${apis.solar_api_url} : ${error}`);
       })
 
     }
@@ -101,12 +82,12 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.room_api_url, request_options)
+      axios.get(apis.room_api_url, request_options)
       .then(response => {
         utils.send_response(reply_token,`Current room: ${response.data}`);
       })
       .catch(error => {
-        utils.send_response(reply_token, `Error connecting to ${secrets.room_api_url} : ${error}`);
+        utils.send_response(reply_token, `Error connecting to ${apis.room_api_url} : ${error}`);
       })
 
     }
