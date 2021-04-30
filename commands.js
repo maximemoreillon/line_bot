@@ -78,16 +78,14 @@ module.exports = [
     }
   },
   {
-    message: "room",
+    message: "location",
     private: true,
     command: (reply_token) => {
 
-      axios.get(apis.room_api_url, request_options)
-      .then(response => {
-        utils.send_response(reply_token,`Current room: ${response.data}`);
-      })
+      axios.get(apis.location_api_url, request_options)
+      .then(({data}) => { utils.send_response(reply_token,`Current location: ${data}`); })
       .catch(error => {
-        utils.send_response(reply_token, `Error connecting to ${apis.room_api_url} : ${error}`);
+        utils.send_response(reply_token, `Error connecting to ${apis.location_api_url} : ${error}`);
       })
 
     }
