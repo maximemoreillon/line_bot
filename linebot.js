@@ -6,9 +6,10 @@ const dotenv = require('dotenv');
 
 const auth = require('@moreillon/express_identification_middleware')
 
-const secrets = require('./secrets')
 const commands = require('./commands')
 const utils = require('./utils')
+
+const line_user_id  = process.env.LINE_USER_ID
 
 dotenv.config()
 
@@ -41,7 +42,7 @@ app.post('/webhook', (req, res) => {
   })
 
   if(found_command) {
-    if(!found_command.private || req.body.events[0].source.userId === secrets.user_id) {
+    if(!found_command.private || req.body.events[0].source.userId === line_user_id) {
       found_command.command(reply_token)
     }
     else {

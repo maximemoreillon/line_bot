@@ -1,9 +1,16 @@
 const utils = require('./utils')
 const axios = require('axios')
+const dotenv = require('dotenv');
+const secrets = require('./secrets.js')
 
-const secrets = require('./secrets');
+dotenv.config()
 
-axios.defaults.headers.common['Authorization'] = `Bearer ${secrets.jwt}`
+const request_options = {
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${process.env.USER_TOKEN}`,
+  }
+}
 
 module.exports = [
   {
@@ -14,10 +21,13 @@ module.exports = [
     }
   },
 
+  /*
   {
     message: "balance",
     private: true,
     command: (reply_token) => {
+
+      const url =
 
       axios.get(secrets.finances_api_url, {params: {account: secrets.finances_account_name}})
       .then(response => {
@@ -29,13 +39,14 @@ module.exports = [
 
     }
   },
+  */
 
   {
     message: "weight",
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.weight_api_url)
+      axios.get(secrets.weight_api_url, request_options)
       .then(response => {
         utils.send_response(reply_token,"Current weight: " + response.data.weight+ " kg");
       })
@@ -51,7 +62,7 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.current_consumption_api_url)
+      axios.get(secrets.current_consumption_api_url, request_options)
       .then(response => {
         utils.send_response(reply_token,`Apartment current consumption: ${response.data.total}A`);
       })
@@ -67,7 +78,7 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.solar_api_url)
+      axios.get(secrets.solar_api_url, request_options)
       .then(response => {
         utils.send_response(reply_token,`Current battery voltage: ${response.data.voltage}V`);
       })
@@ -82,7 +93,7 @@ module.exports = [
     private: true,
     command: (reply_token) => {
 
-      axios.get(secrets.room_api_url)
+      axios.get(secrets.room_api_url, request_options)
       .then(response => {
         utils.send_response(reply_token,`Current room: ${response.data}`);
       })
