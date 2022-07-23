@@ -1,71 +1,78 @@
 const express = require('express')
-const bodyParser = require('body-parser')
-const path = require('path')
 const cors = require('cors')
-const dotenv = require('dotenv');
-
+const dotenv = require('dotenv')
+const createHttpError = require('http-errors')
 const auth = require('@moreillon/express_identification_middleware')
+const {version, author} = require('./package.json')
 
-const commands = require('./commands')
-const utils = require('./utils')
+const {
+  send_response,
+  send_message_to_self
+} = require('./utils')
 
-const line_user_id  = process.env.LINE_USER_ID
 
 dotenv.config()
 
 // Port config
-var port = 80
-if(process.env.APP_PORT) port=process.env.APP_PORT
+const {
+  APP_PORT = 80,
+  IDENTIFICATION_URL
+} = process.env
 
-const auth_options = { url: `${process.env.AUTHENTICATION_API_URL}/whoami` }
 
 const app = express()
-app.use(bodyParser.json())
+app.use(express.json())
 app.use(cors())
 
 
 app.get('/', (req, res) => {
-  res.send("Line bot v1.0.2")
+  res.send({
+    application_name: 'Line Bot',
+    author,
+    version,
+    identification_url: IDENTIFICATION_URL || 'undefined'
+  })
 })
 
-app.post('/webhook', (req, res) => {
+
+
+app.post('/webhook', async (req, res, next) => {
   // Webhook used by LINE
 
   // Return a response to acknowledge receipt of the event
-  res.sendStatus(200);
+  res.sendStatus(200)
 
-  let message = req.body.events[0].message.text;
-  let reply_token = req.body.events[0].replyToken;
-
-  let found_command = commands.find(command => {
-    return command.message.toLowerCase() === message.toLowerCase()
-  })
-
-  if(found_command) {
-    if(!found_command.private || req.body.events[0].source.userId === line_user_id) {
-      found_command.command(reply_token)
-    }
-    else {
-      utils.send_response(reply_token,"Permission denied for command " + message);
-    }
-  }
-  else {
-    utils.send_response(reply_token,"Command not found: " + message);
+  // Placeholder reply for messages
+  try {
+    const { message: { text }, replyToken } = req.body.events[0]
+    await send_response(replyToken, `Your message: ${text}`)
+  } catch (error) {
+    console.error(error)
   }
 
-});
 
-app.post('/notify', auth(auth_options), (req, res) => {
-
-  const {message} = req.body
-
-  if(!message) return res.status(400).send('message not present in body')
-
-  res.send('OK');
-  utils.send_message_to_me(message)
+  
 
 })
 
-app.listen(port, () => {
-  console.log(`Line bot listening on port ${port}!`)
+const auth_options = { url: IDENTIFICATION_URL }
+
+
+app.post('/notify', auth(auth_options), async (req, res, next) => {
+
+
+  try {
+    const { message } = req.body
+    if (!message) throw createHttpError(400, 'Message not defined')
+    await send_message_to_self(message)
+    res.send({ message })
+  }
+  catch (error) {
+    next(error)
+  }
+  
+})
+
+app.listen(APP_PORT, () => {
+  console.log(`[Express] listening on port ${APP_PORT}`)
 })

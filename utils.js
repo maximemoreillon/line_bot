@@ -3,46 +3,43 @@ const dotenv = require('dotenv');
 
 dotenv.config()
 
-const line_user_id  = process.env.LINE_USER_ID
+const {
+  LINE_USER_ID,
+  LINE_CHANNEL_ACCESS_TOKEN,
+} = process.env
 
 
-const request_options = {
-  headers: {
+
+const headers = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`,
+    'Authorization': `Bearer ${LINE_CHANNEL_ACCESS_TOKEN}`,
   }
-}
 
-exports.send_message_to_me = (message_text) => {
+exports.send_message_to_self = (message_text) => {
 
   const url = 'https://api.line.me/v2/bot/message/push'
 
   const data = {
-    to: line_user_id,
+    to: LINE_USER_ID,
     messages: [
       {type: 'text', text: message_text},
     ]
   }
 
 
-  axios.post(url,data,request_options)
-  .then( () => console.log("Message sent successfuly"))
-  .catch(error => console.log(error))
+  return axios.post(url, data, { headers })
 }
 
 
-exports.send_response = (reply_token, response_text) => {
-  // create response
+exports.send_response = (replyToken, text) => {
 
-  const url = 'https://api.line.me/v2/bot/message/reply';
+  const url = 'https://api.line.me/v2/bot/message/reply'
   const data = {
-    replyToken: reply_token,
+    replyToken,
     messages: [
-      {type: 'text', text: response_text},
+      { type: 'text', text },
     ]
-  };
+  }
 
-  axios.post(url, data, request_options)
-  .then(() => console.log("Response sent successfuly"))
-  .catch(error => console.log(error))
+  return axios.post(url, data, { headers })
 }
