@@ -24,9 +24,7 @@ app.get("/", (req: Request, res: Response) => {
   })
 })
 
-app.post("/webhook", async (req, res, next) => {
-  // Webhook used by LINE
-
+app.post("/webhook", async (req, res) => {
   // Return a response to acknowledge receipt of the event
   res.sendStatus(200)
 
@@ -44,7 +42,7 @@ app.post("/webhook", async (req, res, next) => {
 
 const auth_options = { url: IDENTIFICATION_URL }
 
-app.post("/notify", auth(auth_options), async (req, res, next) => {
+app.post("/notify", auth(auth_options), async (req, res) => {
   const { message } = req.body
   if (!message) throw createHttpError(400, "Message not defined")
   await send_message_to_self(message)
