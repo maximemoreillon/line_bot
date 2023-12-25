@@ -10,7 +10,7 @@ variables:
   APPLICATION_NAME: line-bot
   DOCKER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
   DOCKER_IMAGE_TAGGED: ${DOCKER_IMAGE}:${CI_COMMIT_SHORT_SHA}
-  K8S_INGRESS_HOST: linebot.maximemoreillon.com
+  K8S_INGRESS_HOST: linebot.home.maximemoreillon.com
 
 build:
   stage: build
