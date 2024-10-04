@@ -4,12 +4,13 @@ import express from "express"
 import "express-async-errors"
 import cors from "cors"
 import createHttpError from "http-errors"
-import auth from "@moreillon/express_identification_middleware"
+import legacyAuth from "@moreillon/express_identification_middleware"
+import oidcAuth from "@moreillon/express-oidc"
 import { version, author } from "./package.json"
 import { send_response, send_message_to_self } from "./utils"
 import { Request, Response } from "express"
 
-const { APP_PORT = 80, IDENTIFICATION_URL } = process.env
+const { APP_PORT = 80, IDENTIFICATION_URL, OIDC_JWKS_URI } = process.env
 
 const app = express()
 app.use(express.json())
@@ -20,7 +21,10 @@ app.get("/", (req: Request, res: Response) => {
     application_name: "Line Bot",
     author,
     version,
-    identification_url: IDENTIFICATION_URL || "undefined",
+    auth: {
+      IDENTIFICATION_URL,
+      OIDC_JWKS_URI,
+    },
   })
 })
 
@@ -40,9 +44,10 @@ app.post("/webhook", async (req, res) => {
   }
 })
 
-const auth_options = { url: IDENTIFICATION_URL }
+if (OIDC_JWKS_URI) app.use(oidcAuth({ jwksUri: OIDC_JWKS_URI }))
+else if (IDENTIFICATION_URL) app.use(legacyAuth({ url: IDENTIFICATION_URL }))
 
-app.post("/notify", auth(auth_options), async (req, res) => {
+app.post("/notify", async (req, res) => {
   const { message } = req.body
   if (!message) throw createHttpError(400, "Message not defined")
   await send_message_to_self(message)
